@@ -1,15 +1,23 @@
 .heroPage {
-  min-height: 100vh;
   background: #070b12;
 }
 
-.heroSection {
+.scrollContainer {
   position: relative;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 300vh;
+}
+
+.heroSection {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px 40px;
+  padding: 80px 24px 40px;
   background-image: linear-gradient(
       90deg,
       rgba(7, 11, 18, 0.9) 0%,
@@ -63,14 +71,14 @@
 }
 
 .centerImageWrap {
-  position: relative;
+  position: absolute;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   max-width: 650px;
-  transform: translateY(-40px);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
 
 .centerImage {
@@ -82,114 +90,133 @@
   filter: invert(1);
 }
 
-.bottomRightCoins {
+/* About Section Wrapper */
+.aboutWrapper {
   position: absolute;
-  bottom: -120px;
-  right: -200px;
-  z-index: 1;
-  max-width: clamp(340px, 48vw, 750px);
-  height: auto;
-  pointer-events: none;
-}
-
-.bottomRightChest {
-  position: absolute;
-  bottom: -20px;
-  right: 0px;
   z-index: 3;
-  max-width: clamp(180px, 25vw, 380px);
-  height: auto;
-  pointer-events: none;
-  transform: scaleX(-1);
-}
-
-.bottomLeftShip {
-  position: absolute;
-  bottom: -40px;
-  left: -220px;
-  z-index: 3;
-  width: clamp(380px, 48vw, 750px);
-  height: clamp(380px, 48vw, 750px);
-  pointer-events: auto;
-}
-
-/* About Section */
-.aboutSection {
-  position: relative;
-  background: radial-gradient(circle at top center, #0e1726 0%, #070b12 70%);
-  padding: 100px 24px;
-  color: #ffffff;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.aboutContainer {
-  max-width: 1100px;
+  width: min(1280px, 92%);
   margin: 0 auto;
-  text-align: center;
+  padding: 0 16px;
+  background: transparent;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
 }
 
-.aboutBadge {
-  display: inline-block;
-  padding: 6px 18px;
-  border-radius: 999px;
-  background: rgba(255, 191, 0, 0.12);
-  border: 1px solid rgba(255, 191, 0, 0.3);
+/* Games Section Wrapper */
+.gamesWrapper {
+  position: absolute;
+  z-index: 4;
+  width: min(1280px, 92%);
+  margin: 0 auto;
+  padding: 0 16px;
+  background: transparent;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+}
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 480px);
+  align-items: center;
+  gap: clamp(24px, 4vw, 60px);
+}
+
+.aboutTextContent {
+  text-align: left;
+  transition: transform 0.15s ease-out;
+}
+
+.aboutShipContainer {
+  width: 100%;
+  height: clamp(420px, 52vw, 680px);
+  position: relative;
+  z-index: 10;
+  transition: transform 0.15s ease-out;
+}
+
+.aboutYellowHeading {
   color: #ffc93d;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  margin-bottom: 24px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
 .aboutTitle {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
   font-weight: 800;
   color: #ffffff;
-  line-height: 1.2;
-  margin-bottom: 20px;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 18px;
+  letter-spacing: -0.03em;
 }
 
 .aboutDescription {
-  max-width: 780px;
-  margin: 0 auto 56px;
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.78);
+  max-width: 680px;
+  margin-bottom: 36px;
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .statCard {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 32px 20px;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  border-radius: 0;
+  padding: 8px 0;
+  transition: transform 0.3s ease;
 }
 
 .statCard:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 191, 0, 0.4);
 }
 
 .statNumber {
-  font-size: clamp(2.2rem, 3.5vw, 3rem);
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
   font-weight: 800;
   color: #ffc93d;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   background: linear-gradient(135deg, #ffc93d, #ff8f32);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .statLabel {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.aboutShipContainer {
+  width: 100%;
+  height: clamp(420px, 52vw, 680px);
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 900px) {
+  .aboutGrid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .aboutTextContent {
+    text-align: center;
+  }
+
+  .aboutDescription {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .aboutShipContainer {
+    height: 300px;
+    order: -1;
+  }
 }

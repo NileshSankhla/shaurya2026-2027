@@ -7,10 +7,8 @@ interface NavbarProps {
 const defaultLinks = [
   { label: "Home", href: "#home" },
   { label: "Events", href: "#events" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Games", href: "#games" },
   { label: "Sponsors", href: "#sponsors" },
-  { label: "Matches", href: "#matches" },
-  { label: "Teams", href: "#teams" },
 ];
 
 export default function Navbar({ links = defaultLinks }: NavbarProps) {

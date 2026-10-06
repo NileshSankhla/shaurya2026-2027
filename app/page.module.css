@@ -90,7 +90,7 @@
 .aboutWrapper {
   position: absolute;
   z-index: 3;
-  width: min(1280px, 92%);
+  width: min(1440px, 95%);
   margin: 0 auto;
   padding: 0 16px;
   background: transparent;
@@ -111,7 +111,7 @@
 
 .aboutGrid {
   display: grid;
-  grid-template-columns: 1fr minmax(300px, 480px);
+  grid-template-columns: 1fr minmax(400px, 680px);
   align-items: center;
   gap: clamp(24px, 4vw, 60px);
 }
@@ -123,9 +123,10 @@
 
 .aboutShipContainer {
   width: 100%;
-  height: clamp(420px, 52vw, 680px);
+  height: clamp(450px, 55vw, 720px);
   position: relative;
   z-index: 10;
+  overflow: visible;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

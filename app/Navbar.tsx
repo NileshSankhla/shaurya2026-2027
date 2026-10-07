@@ -31,11 +31,7 @@ export default function Navbar({ links = defaultLinks }: NavbarProps) {
 
           <div className={styles.logoWrap}>
             <a href={links[0]?.href ?? "#home"} className={styles.logoLink}>
-              <img
-                src="/logo.png"
-                alt="Shaurya logo"
-                className={styles.logo}
-              />
+              <img src="/logo.png" alt="Shaurya logo" className={styles.logo} />
             </a>
           </div>
 

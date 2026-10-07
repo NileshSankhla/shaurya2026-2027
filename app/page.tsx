@@ -37,7 +37,13 @@ const PARTICLES: Particle[] = Array.from({ length: 45 }, (_, i) => ({
   drift: ((i * 29) % 120) - 60,
 }));
 
-function StatCounter({ prefix = "", targetNumber, suffix = "", label, isFullyScrolled }: StatItemProps) {
+function StatCounter({
+  prefix = "",
+  targetNumber,
+  suffix = "",
+  label,
+  isFullyScrolled,
+}: StatItemProps) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -88,26 +94,25 @@ export default function Home() {
   const isAnimatingRef = useRef(false);
   const touchStartY = useRef(0);
 
-  const navigateSection = useCallback(
-    (direction: 1 | -1) => {
-      if (isAnimatingRef.current) return;
+  const navigateSection = useCallback((direction: 1 | -1) => {
+    if (isAnimatingRef.current) return;
 
-      setActiveSection((prev) => {
-        const next = prev + direction;
-        if (next < 0 || next >= TOTAL_SECTIONS) return prev;
-        isAnimatingRef.current = true;
-        setTimeout(() => {
-          isAnimatingRef.current = false;
-        }, TRANSITION_MS);
-        return next;
-      });
-    },
-    []
-  );
+    setActiveSection((prev) => {
+      const next = prev + direction;
+      if (next < 0 || next >= TOTAL_SECTIONS) return prev;
+      isAnimatingRef.current = true;
+      setTimeout(() => {
+        isAnimatingRef.current = false;
+      }, TRANSITION_MS);
+      return next;
+    });
+  }, []);
 
   // Wheel navigation
   useEffect(() => {
-    const particleFrame = requestAnimationFrame(() => setParticlesVisible(true));
+    const particleFrame = requestAnimationFrame(() =>
+      setParticlesVisible(true),
+    );
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
@@ -185,23 +190,24 @@ export default function Home() {
       <section className={styles.heroSection}>
         {/* Ash Particles overlay */}
         <div className={styles.particlesContainer} aria-hidden="true">
-          {particlesVisible && PARTICLES.map((p) => (
-            <span
-              key={p.id}
-              className={styles.particle}
-              style={
-                {
-                  left: `${p.left}%`,
-                  width: `${p.size}px`,
-                  height: `${p.size}px`,
-                  animationDuration: `${p.duration}s`,
-                  animationDelay: `${p.delay}s`,
-                  opacity: p.opacity,
-                  "--drift": `${p.drift}px`,
-                } as React.CSSProperties
-              }
-            />
-          ))}
+          {particlesVisible &&
+            PARTICLES.map((p) => (
+              <span
+                key={p.id}
+                className={styles.particle}
+                style={
+                  {
+                    left: `${p.left}%`,
+                    width: `${p.size}px`,
+                    height: `${p.size}px`,
+                    animationDuration: `${p.duration}s`,
+                    animationDelay: `${p.delay}s`,
+                    opacity: p.opacity,
+                    "--drift": `${p.drift}px`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
         </div>
 
         {/* Hero image — fades out when leaving section 0 */}

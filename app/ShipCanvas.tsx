@@ -138,12 +138,16 @@ function CameraFit() {
 }
 
 export default function ShipCanvas() {
-  const [webglAvailable, setWebglAvailable] = React.useState<boolean | null>(null);
+  const [webglAvailable, setWebglAvailable] = React.useState<boolean | null>(
+    null,
+  );
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("webgl");
-    const frame = requestAnimationFrame(() => setWebglAvailable(Boolean(context)));
+    const frame = requestAnimationFrame(() =>
+      setWebglAvailable(Boolean(context)),
+    );
     return () => cancelAnimationFrame(frame);
   }, []);
 

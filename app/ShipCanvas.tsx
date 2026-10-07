@@ -14,7 +14,8 @@ function AnimatedLighting() {
     elapsed.current += delta;
     const time = elapsed.current;
     if (lanternLightRef.current) {
-      lanternLightRef.current.intensity = 5 + Math.sin(time * 5) * 2 + Math.cos(time * 8) * 1;
+      lanternLightRef.current.intensity =
+        5 + Math.sin(time * 5) * 2 + Math.cos(time * 8) * 1;
     }
     if (spotLightRef.current) {
       spotLightRef.current.position.x = Math.sin(time * 0.7) * 10;
@@ -25,10 +26,29 @@ function AnimatedLighting() {
   return (
     <>
       <ambientLight intensity={3.5} />
-      <directionalLight position={[15, 30, 20]} intensity={6.5} color="#fff6e5" castShadow />
-      <directionalLight position={[-15, 12, -15]} intensity={4} color="#ff6000" />
-      <directionalLight position={[0, -10, 15]} intensity={2.5} color="#ffd166" />
-      <pointLight ref={lanternLightRef} position={[2, 4, 4]} intensity={6} color="#ff8c00" distance={20} />
+      <directionalLight
+        position={[15, 30, 20]}
+        intensity={6.5}
+        color="#fff6e5"
+        castShadow
+      />
+      <directionalLight
+        position={[-15, 12, -15]}
+        intensity={4}
+        color="#ff6000"
+      />
+      <directionalLight
+        position={[0, -10, 15]}
+        intensity={2.5}
+        color="#ffd166"
+      />
+      <pointLight
+        ref={lanternLightRef}
+        position={[2, 4, 4]}
+        intensity={6}
+        color="#ff8c00"
+        distance={20}
+      />
       <spotLight
         ref={spotLightRef}
         position={[0, 18, 14]}
@@ -62,7 +82,6 @@ function Model() {
   useEffect(() => {
     if (!groupRef.current) return;
     const box = new THREE.Box3().setFromObject(groupRef.current);
-    const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
     const targetSize = 5; // normalize to ~5 world units
@@ -119,9 +138,21 @@ function CameraFit() {
 }
 
 export default function ShipCanvas() {
+  const [webglAvailable, setWebglAvailable] = React.useState<boolean | null>(null);
+
+  useEffect(() => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("webgl");
+    const frame = requestAnimationFrame(() => setWebglAvailable(Boolean(context)));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  if (webglAvailable !== true) return null;
+
   return (
     <Canvas
       camera={{ position: [0, 2, 12], fov: 45 }}
+      fallback={<div aria-hidden="true" />}
       style={{ width: "100%", height: "100%" }}
     >
       <AnimatedLighting />
@@ -138,11 +169,7 @@ export default function ShipCanvas() {
           polar={[-Math.PI / 6, Math.PI / 6]}
           azimuth={[-Math.PI / 3, Math.PI / 3]}
         >
-          <Float
-            speed={2.2}
-            rotationIntensity={0.6}
-            floatIntensity={0.5}
-          >
+          <Float speed={2.2} rotationIntensity={0.6} floatIntensity={0.5}>
             <Model />
           </Float>
         </PresentationControls>

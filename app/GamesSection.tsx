@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import styles from "./GamesSection.module.css";
 
 interface Game {
@@ -32,16 +33,12 @@ const games: Game[] = [
 
 export default function GamesSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
   const totalGames = games.length;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsTransitioning(true);
       setTimeout(() => {
         setActiveIndex((prev) => (prev + 1) % totalGames);
-        setIsTransitioning(false);
       }, 500); // matches the CSS transition duration
     }, 3500);
 
@@ -69,9 +66,11 @@ export default function GamesSection() {
               onClick={() => setActiveIndex(idx)}
             >
               <div className={styles.cardImageWrap}>
-                <img
+                <Image
                   src={game.image}
                   alt={game.name}
+                  width={340}
+                  height={300}
                   className={styles.cardImage}
                 />
               </div>
@@ -93,10 +92,8 @@ export default function GamesSection() {
               idx === activeIndex ? styles.dotActive : ""
             }`}
             onClick={() => {
-              setIsTransitioning(true);
               setTimeout(() => {
                 setActiveIndex(idx);
-                setIsTransitioning(false);
               }, 400);
             }}
             aria-label={`Show game ${idx + 1}`}

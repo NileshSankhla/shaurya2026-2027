@@ -2,9 +2,10 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
-import Navbar from "./Navbar";
+import Image from "next/image";
 import styles from "./page.module.css";
 
+const Navbar = dynamic(() => import("./Navbar"), { ssr: false });
 const ShipCanvas = dynamic(() => import("./ShipCanvas"), { ssr: false });
 const GamesSection = dynamic(() => import("./GamesSection"), { ssr: false });
 
@@ -26,12 +27,21 @@ interface StatItemProps {
   isFullyScrolled: boolean;
 }
 
+const PARTICLES: Particle[] = Array.from({ length: 45 }, (_, i) => ({
+  id: i,
+  left: (i * 37) % 100,
+  size: 2 + ((i * 13) % 30) / 10,
+  duration: 5 + ((i * 17) % 70) / 10,
+  delay: ((i * 19) % 80) / 10,
+  opacity: 0.3 + ((i * 23) % 70) / 100,
+  drift: ((i * 29) % 120) - 60,
+}));
+
 function StatCounter({ prefix = "", targetNumber, suffix = "", label, isFullyScrolled }: StatItemProps) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!isFullyScrolled) {
-      setCount(0);
       return;
     }
 
@@ -50,7 +60,10 @@ function StatCounter({ prefix = "", targetNumber, suffix = "", label, isFullyScr
       }
     };
 
-    animationFrameId = requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(() => {
+      setCount(0);
+      animate(performance.now());
+    });
     return () => cancelAnimationFrame(animationFrameId);
   }, [isFullyScrolled, targetNumber]);
 
@@ -58,7 +71,7 @@ function StatCounter({ prefix = "", targetNumber, suffix = "", label, isFullyScr
     <div className={styles.statCard}>
       <h3 className={styles.statNumber}>
         {prefix}
-        {count.toLocaleString()}
+        {(isFullyScrolled ? count : 0).toLocaleString()}
         {suffix}
       </h3>
       <p className={styles.statLabel}>{label}</p>
@@ -70,23 +83,10 @@ const TOTAL_SECTIONS = 3; // 0=Hero, 1=About, 2=Games
 const TRANSITION_MS = 800; // matches CSS transition duration
 
 export default function Home() {
-  const [particles, setParticles] = useState<Particle[]>([]);
+  const [particlesVisible, setParticlesVisible] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const isAnimatingRef = useRef(false);
   const touchStartY = useRef(0);
-
-  useEffect(() => {
-    const generated: Particle[] = Array.from({ length: 45 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      size: Math.random() * 5 + 2,
-      duration: Math.random() * 7 + 5,
-      delay: Math.random() * 8,
-      opacity: Math.random() * 0.7 + 0.3,
-      drift: (Math.random() - 0.5) * 120,
-    }));
-    setParticles(generated);
-  }, []);
 
   const navigateSection = useCallback(
     (direction: 1 | -1) => {
@@ -107,6 +107,8 @@ export default function Home() {
 
   // Wheel navigation
   useEffect(() => {
+    const particleFrame = requestAnimationFrame(() => setParticlesVisible(true));
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (Math.abs(e.deltaY) < 15) return;
@@ -114,7 +116,10 @@ export default function Home() {
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
+    return () => {
+      cancelAnimationFrame(particleFrame);
+      window.removeEventListener("wheel", handleWheel);
+    };
   }, [navigateSection]);
 
   // Keyboard navigation (arrow keys)
@@ -180,7 +185,7 @@ export default function Home() {
       <section className={styles.heroSection}>
         {/* Ash Particles overlay */}
         <div className={styles.particlesContainer} aria-hidden="true">
-          {particles.map((p) => (
+          {particlesVisible && PARTICLES.map((p) => (
             <span
               key={p.id}
               className={styles.particle}
@@ -208,7 +213,13 @@ export default function Home() {
             pointerEvents: activeSection === 0 ? "auto" : "none",
           }}
         >
-          <img src="/image.png" alt="Shaurya" className={styles.centerImage} />
+          <Image
+            src="/image.png"
+            alt="Shaurya"
+            width={650}
+            height={500}
+            className={styles.centerImage}
+          />
         </div>
 
         {/* About section — visible on section 1 */}
